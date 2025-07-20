@@ -2,7 +2,7 @@ package com.example.restaurantreviews.controller;
 
 import com.example.restaurantreviews.dto.request.RestaurantRequestDto;
 import com.example.restaurantreviews.dto.response.RestaurantResponseDto;
-import com.example.restaurantreviews.service.RestaurantService;
+import com.example.restaurantreviews.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

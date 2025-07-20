@@ -1,4 +1,4 @@
-package com.example.restaurantreviews.service;
+package com.example.restaurantreviews;
 
 import com.example.restaurantreviews.dto.request.RestaurantRequestDto;
 import com.example.restaurantreviews.dto.response.RestaurantResponseDto;
