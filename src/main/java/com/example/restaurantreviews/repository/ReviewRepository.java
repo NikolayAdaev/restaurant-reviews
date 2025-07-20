@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Optional; // <-- Необходим импорт
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -32,10 +32,16 @@ public class ReviewRepository {
         return new ArrayList<>(reviews);
     }
 
-    // Вместо findById по заданию, сделаем поиск по ID ресторана, это логичнее
     public List<Review> findByRestaurantId(Long restaurantId) {
         return reviews.stream()
                 .filter(r -> r.getRestaurantId().equals(restaurantId))
                 .collect(Collectors.toList());
+    }
+
+    // --- ДОБАВЛЕН МЕТОД ---
+    public Optional<Review> findById(Long id) {
+        return reviews.stream()
+                .filter(r -> r.getId().equals(id))
+                .findFirst();
     }
 }
