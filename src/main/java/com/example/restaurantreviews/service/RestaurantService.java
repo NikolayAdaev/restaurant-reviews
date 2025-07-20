@@ -21,27 +21,23 @@ public class RestaurantService {
 
     public RestaurantResponseDto create(RestaurantRequestDto dto) {
         Restaurant restaurant = restaurantMapper.toEntity(dto);
-        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
-        return restaurantMapper.toResponseDto(savedRestaurant);
+        return restaurantMapper.toResponseDto(restaurantRepository.save(restaurant));
     }
 
     public RestaurantResponseDto update(Long id, RestaurantRequestDto dto) {
-        // Находим существующий ресторан, чтобы не потерять его рейтинг
         Restaurant existingRestaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Ресторан с ID " + id + " не найден"));
+                .orElseThrow(() -> new RuntimeException("Restaurant not found with id: " + id));
 
-        // Обновляем поля из DTO
         existingRestaurant.setName(dto.name());
         existingRestaurant.setDescription(dto.description());
         existingRestaurant.setCuisineType(dto.cuisineType());
         existingRestaurant.setAverageCheck(dto.averageCheck());
 
-        Restaurant updatedRestaurant = restaurantRepository.save(existingRestaurant);
-        return restaurantMapper.toResponseDto(updatedRestaurant);
+        return restaurantMapper.toResponseDto(restaurantRepository.save(existingRestaurant));
     }
 
-    public boolean remove(Long id) {
-        return restaurantRepository.remove(id);
+    public void remove(Long id) {
+        restaurantRepository.deleteById(id);
     }
 
     public List<RestaurantResponseDto> findAll() {

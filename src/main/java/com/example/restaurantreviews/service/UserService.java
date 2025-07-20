@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional; // <-- Убедитесь, что этот импорт есть
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,35 +21,32 @@ public class UserService {
 
     public UserResponseDto create(UserRequestDto dto) {
         User user = userMapper.toEntity(dto);
-        User savedUser = userRepository.save(user);
-        return userMapper.toResponseDto(savedUser);
+        return userMapper.toResponseDto(userRepository.save(user));
     }
 
     public UserResponseDto update(Long id, UserRequestDto dto) {
-        // Убеждаемся, что пользователь существует, прежде чем обновлять
-        userRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Пользователь с ID " + id + " не найден"));
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
-        User user = userMapper.toEntity(dto);
-        user.setId(id);
-        User updatedUser = userRepository.save(user);
-        return userMapper.toResponseDto(updatedUser);
+        existingUser.setName(dto.name());
+        existingUser.setAge(dto.age());
+        existingUser.setGender(dto.gender());
+
+        return userMapper.toResponseDto(userRepository.save(existingUser));
     }
 
-    public boolean remove(Long id) {
-        return userRepository.remove(id);
-    }
-
-    // --- ИСПРАВЛЕННЫЙ МЕТОД ---
-    // Теперь он корректно возвращает Optional<UserResponseDto>
-    public Optional<UserResponseDto> findById(Long id) {
-        return userRepository.findById(id)
-                .map(userMapper::toResponseDto);
+    public void remove(Long id) {
+        userRepository.deleteById(id);
     }
 
     public List<UserResponseDto> findAll() {
         return userRepository.findAll().stream()
                 .map(userMapper::toResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    public Optional<UserResponseDto> findById(Long id) {
+        return userRepository.findById(id)
+                .map(userMapper::toResponseDto);
     }
 }

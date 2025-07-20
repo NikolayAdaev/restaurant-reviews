@@ -1,17 +1,33 @@
 package com.example.restaurantreviews.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "reviews")
 public class Review {
-    // Я добавлю ID для самой оценки, это более правильный подход
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    private Long restaurantId;
-    private int score; // Оценка от 1 до 5
-    private String text; // Не обязательное
+
+    // Много отзывов могут принадлежать одному пользователю
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    private User user;
+
+    // Много отзывов могут принадлежать одному ресторану
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    @ToString.Exclude
+    private Restaurant restaurant;
+
+    private int score;
+    private String text;
 }

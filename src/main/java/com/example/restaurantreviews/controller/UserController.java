@@ -26,7 +26,6 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    // --- УБЕДИТЕСЬ, ЧТО МЕТОД ВЫГЛЯДИТ ТАК ---
     @GetMapping("/{id}")
     @Operation(summary = "Получить посетителя по ID")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
@@ -50,8 +49,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить посетителя")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        return userService.remove(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        userService.remove(id);
+        return ResponseEntity.noContent().build();
     }
 }

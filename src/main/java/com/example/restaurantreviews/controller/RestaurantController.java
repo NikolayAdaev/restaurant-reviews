@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional; // <-- Убедитесь, что этот импорт есть
 
 @RestController
 @RequestMapping("/api/restaurants")
@@ -27,7 +26,6 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.findAll());
     }
 
-    // --- ИСПРАВЛЕН МЕТОД ---
     @GetMapping("/{id}")
     @Operation(summary = "Получить ресторан по ID")
     public ResponseEntity<RestaurantResponseDto> getRestaurantById(@PathVariable Long id) {
@@ -48,9 +46,11 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.update(id, dto));
     }
 
+    // --- ИСПРАВЛЕН МЕТОД ---
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить ресторан")
     public ResponseEntity<Void> deleteRestaurant(@PathVariable Long id) {
-        return restaurantService.remove(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        restaurantService.remove(id);
+        return ResponseEntity.noContent().build();
     }
 }
