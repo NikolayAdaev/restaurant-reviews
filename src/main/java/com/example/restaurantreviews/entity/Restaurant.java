@@ -1,20 +1,39 @@
 package com.example.restaurantreviews.entity;
 
 import com.example.restaurantreviews.enums.CuisineType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "restaurants")
 public class Restaurant {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    private String description; // Не обязательное
+    private String description;
+
+    @Enumerated(EnumType.STRING)
     private CuisineType cuisineType;
+
     private int averageCheck;
-    private BigDecimal rating; // Средняя оценка
+
+    @Column(precision = 3, scale = 2)
+    private BigDecimal rating;
+
+    // Один ресторан может иметь много отзывов
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Review> reviews = new ArrayList<>();
 }

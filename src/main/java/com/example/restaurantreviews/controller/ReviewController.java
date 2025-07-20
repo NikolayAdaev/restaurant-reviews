@@ -43,15 +43,13 @@ public class ReviewController {
     @PutMapping("/{id}")
     @Operation(summary = "Обновить существующий отзыв")
     public ResponseEntity<ReviewResponseDto> updateReview(@PathVariable Long id, @RequestBody ReviewRequestDto dto) {
-        // Мы предполагаем, что сервис может найти отзыв по id и обновить его поля из dto
         return ResponseEntity.ok(reviewService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить отзыв")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
-        return reviewService.remove(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        reviewService.remove(id);
+        return ResponseEntity.noContent().build();
     }
 }
